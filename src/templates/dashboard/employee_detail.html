@@ -128,15 +128,8 @@ span{
                                      </div>
                                     {% endfor %}
                             {% endif %}
-
                         </section>
                     </section>
-            		<section class="row">
-            			<section class="text-center">
-            				<h3><span class="employee-name-title">{{ employee.get_full_name}}</span></h3>
-            			</section>
-            		</section>
-
                 	<section class="row">
                 	<section class="col col-lg-4 col-md-4 col-sm-12 profile-wrapper">
                     {% if employee.image %}
@@ -147,12 +140,11 @@ span{
         						  <section class="text-centered" style="margin-top: 3px;">
         						    
             							<ul class="list-group">
-              					  		<li class="list-group-item"><span>Fullname</span> <div>{{ employee.get_full_name }}</div></li>
+              					  		<li class="list-group-item"><span>User</span> <div>{{ employee.user }}</div></li>
                               {% if employee.email %}
                               <li class="list-group-item"><span>Email</span> <div>{{ employee.email}}</div></li>
                               {% endif %}
                               <li class="list-group-item"><span>Department</span> <div>{{ employee.department}}</div></li>
-                              <li class="list-group-item"><span>Employee Type</span> <div>{{ employee.employeetype}}</div></li>
                               <li class="list-group-item"><span>Role</span> <div>{{ employee.role}}</div></li>
               					  		<li class="list-group-item"><span>Date of Birth</span> <div>{{ employee.birthday}}</div></li>
                               <li class="list-group-item"><span>Age </span><div>{{ employee.get_age }}</div></li>
@@ -195,8 +187,6 @@ span{
                                         {% if employee %}
                                           
                                           <div class="list-group" id="list-tab" role="tablist">
-                                            <a class="list-group-item list-group-item-action" id="list-home-list" data-toggle="list" href="" role="tab" aria-controls=""><span>Salutation</span> <div>{{ employee.title }}</div>
-                                            </a>
 
                                             {% if employee.firstname %}
                                             <a class="list-group-item list-group-item-action" id="list-profile-list" data-toggle="list" href="" role="tab" aria-controls=""><span>Firstname</span> <div> {{ employee.firstname}} </div>

@@ -44,7 +44,10 @@ def login_view(request):
             if user and user.is_active:
                 login(request, user)
                 if login_user.is_authenticated:
-                    return redirect('dashboard:announcements')
+                    if not (login_user.is_superuser and login_user.is_staff):
+                        return redirect('dashboard:announcements')
+                    else:
+                        return redirect('dashboard:dashboard')
             else:
                 messages.error(request, 'Account is invalid',
                                extra_tags='alert alert-error alert-dismissible show')

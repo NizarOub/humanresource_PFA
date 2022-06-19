@@ -185,7 +185,6 @@ def dashboard_employee_info(request, id):
 
     dataset = dict()
     dataset['employee'] = employee
-    dataset['title'] = 'profile - {0}'.format(employee.get_full_name)
     return render(request, 'dashboard/employee_detail.html', dataset)
 
 # DELETE EMPLOYEE

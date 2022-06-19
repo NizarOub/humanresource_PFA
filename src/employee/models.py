@@ -106,17 +106,6 @@ class Employee(models.Model):
         return self.get_full_name
 
     @property
-    def get_full_name(self):
-        fullname = ''
-        firstname = self.firstname
-        lastname = self.lastname
-
-        if (firstname and lastname) is None:
-            fullname = firstname + ' ' + lastname
-            return fullname
-        return
-
-    @property
     def get_age(self):
         current_year = datetime.date.today().year
         dateofbirth_year = self.birthday.year
