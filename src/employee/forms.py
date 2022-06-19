@@ -1,5 +1,5 @@
 from django import forms
-from employee.models import Role, Department, Employee
+from employee.models import Role, Department, Employee, Announcement
 from django.contrib.auth.models import User
 
 
@@ -30,3 +30,14 @@ class RoleCreateForm(forms.ModelForm):
     class Meta:
         model = Role
         exclude = ['created', 'updated']
+
+# create annoucement form with name, description, date debut, date fin
+
+
+class AnnouncementCreateForm(forms.ModelForm):
+    class Meta:
+        model = Announcement
+        exclude = ['created', 'updated']
+        widgets = {
+            'bio': forms.Textarea(attrs={'cols': 5, 'rows': 5})
+        }

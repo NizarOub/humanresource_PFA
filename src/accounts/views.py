@@ -33,6 +33,7 @@ def changepassword(request):
     form = PasswordChangeForm(request.user)
     return render(request, 'accounts/change_password_form.html', {'form': form})
 
+
 def login_view(request):
     '''
     work on me - needs messages and redirects
@@ -49,7 +50,7 @@ def login_view(request):
             if user and user.is_active:
                 login(request, user)
                 if login_user.is_authenticated:
-                    return redirect('dashboard:dashboard')
+                    return redirect('dashboard:announcements')
             else:
                 messages.error(request, 'Account is invalid',
                                extra_tags='alert alert-error alert-dismissible show')

@@ -1,8 +1,9 @@
 import datetime
+from doctest import FAIL_FAST
 from django.db import models
 from employee.managers import EmployeeManager
 from phonenumber_field.modelfields import PhoneNumberField
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 from django.contrib.auth.models import User
 
 
@@ -91,7 +92,7 @@ class Employee(models.Model):
 
     # PERSONAL DATA
     user = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
-    title = models.CharField(_('Title'), max_length=4,
+    title = models.CharField(_('Title'), max_length=10,
                              default=MR, choices=TITLE, blank=False, null=True)
     image = models.FileField(_('Profile Image'), upload_to='profiles', default='default.png', blank=True,
                              null=True, help_text='upload image size less than 2.0MB')  # work on path username-date/image
@@ -101,12 +102,12 @@ class Employee(models.Model):
         _('Lastname'), max_length=125, null=False, blank=False)
     othername = models.CharField(
         _('Othername (optional)'), max_length=125, null=True, blank=True)
-    sex = models.CharField(_('Gender'), max_length=8,
+    sex = models.CharField(_('Gender'), max_length=10,
                            default=MALE, choices=GENDER, blank=False)
     email = models.CharField(
         _('Email (optional)'), max_length=255, default=None, blank=True, null=True)
-    tel = PhoneNumberField(default='+233240000000', null=False, blank=False,
-                           verbose_name='Phone Number (Example +233240000000)', help_text='Enter number with Country Code Eg. +233240000000')
+    tel = PhoneNumberField(default='+212000000000', null=False, blank=False,
+                           verbose_name='Phone Number (Example +212000000000)', help_text='Enter number with Country Code Eg. +212000000000')
     bio = models.CharField(_('Bio'), help_text='your biography,tell me something about yourself eg. i love working ...',
                            max_length=255, default='', null=True, blank=True)
     birthday = models.DateField(_('Birthday'), blank=False, null=False)
@@ -168,3 +169,21 @@ class Employee(models.Model):
         if dateofbirth_year:
             return current_year - dateofbirth_year
         return
+
+
+# class announcement with name, description, date debut, date fin
+class Announcement(models.Model):
+    name = models.CharField(max_length=125)
+    bio = models.CharField(max_length=255, default='', null=True, blank=True)
+
+    created = models.DateTimeField(
+        verbose_name=_('Created'), auto_now_add=True)
+    updated = models.DateTimeField(verbose_name=_('Updated'), auto_now=True)
+
+    class Meta:
+        verbose_name = _('Announcement')
+        verbose_name_plural = _('Announcements')
+        ordering = ['name', 'created']
+
+    def __str__(self):
+        return self.name

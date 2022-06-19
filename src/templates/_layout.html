@@ -108,13 +108,14 @@
     	<div class="sidebar-wrapper">
 
             <ul class="nav">
+                {% if request.user.is_superuser and request.user.is_staff %}
+
                 <li class="active">
                     <a href="{% url 'dashboard:dashboard' %}">
                         <i class="pe-7s-graph"></i>
                         <p>Dashboard</p>
                     </a>
                 </li>
-                {% if request.user.is_superuser and request.user.is_staff %}
                 <li>
                     <a href="{% url 'dashboard:employees' %}">
                         <i class="pe-7s-users"></i>
@@ -128,6 +129,12 @@
                     </a>
                 </li>
                 {% endif %}
+                <li>
+                    <a href="{% url 'dashboard:announcements' %}">
+                        <i class="pe-7s-ribbon"></i>
+                        <p>Annoucements</p>
+                    </a>
+                </li>
             </ul>
     	</div>
 

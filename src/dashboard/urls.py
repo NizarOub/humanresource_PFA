@@ -29,4 +29,13 @@ urlpatterns = [
     path('role/create/', views.dashboard_role_create, name='rolecreate'),
     path('role/edit/<int:id>/', views.dashboard_role_edit_data, name='roleedit'),
     path('role/delete/<int:id>/', views.dashboard_role_delete, name='roledelete'),
+
+    # Announcement
+    path('announcements/all/', views.dashboard_announcements, name='announcements'),
+    path('announcement/create/', views.dashboard_announcement_create,
+         name='announcementcreate'),
+    path('announcement/edit/<int:id>/',
+         views.dashboard_announcement_edit_data, name='announcementedit'),
+    path('announcement/delete/<int:id>/',
+         views.dashboard_announcement_delete, name='announcementdelete'),
 ]

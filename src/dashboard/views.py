@@ -8,7 +8,7 @@ import datetime
 from django.core.mail import send_mail
 from django.contrib import messages
 from django.urls import reverse
-from employee.forms import EmployeeCreateForm, DepartmentCreateForm, RoleCreateForm
+from employee.forms import EmployeeCreateForm, DepartmentCreateForm, RoleCreateForm, AnnouncementCreateForm
 from employee.models import *
 # from leave.forms import CommentForm
 
@@ -325,6 +325,8 @@ def dashboard_role_delete(request, id):
     return redirect('dashboard:roles')
 
 # function dashboard_departement__delete view
+
+
 def dashboard_department_delete(request, id):
     if not (request.user.is_authenticated and request.user.is_superuser and request.user.is_staff):
         return redirect('/')
@@ -334,6 +336,8 @@ def dashboard_department_delete(request, id):
     return redirect('dashboard:departments')
 
 # function dashboard_employee__delete view
+
+
 def dashboard_employee_delete(request, id):
     if not (request.user.is_authenticated and request.user.is_superuser and request.user.is_staff):
         return redirect('/')
@@ -341,3 +345,82 @@ def dashboard_employee_delete(request, id):
     employee = get_object_or_404(Employee, id=id)
     employee.delete()
     return redirect('dashboard:employees')
+
+
+# admin can create a announcement
+def dashboard_announcement_create(request):
+    if not (request.user.is_authenticated and request.user.is_superuser and request.user.is_staff):
+        return redirect('/')
+
+    if request.method == 'POST':
+        form = AnnouncementCreateForm(request.POST)
+        if form.is_valid():
+            instance = form.save(commit=False)
+            instance.name = request.POST.get('name')
+            instance.description = request.POST.get('description')
+            instance.debut = request.POST.get('debut')
+            instance.fin = request.POST.get('fin')
+            instance.save()
+            return redirect('dashboard:announcements')
+        else:
+            messages.error(request, 'Trying to create dublicate announcement',
+                           extra_tags='alert alert-warning alert-dismissible show')
+            return redirect('dashboard:announcementcreate')
+
+    dataset = dict()
+    form = AnnouncementCreateForm()
+    dataset['form'] = form
+    dataset['name'] = 'register announcement'
+    return render(request, 'dashboard/announcement_create.html', dataset)
+
+# announcements view
+
+
+def dashboard_announcements(request):
+    if not (request.user.is_authenticated):
+        return redirect('/')
+
+    dataset = dict()
+    dataset['title'] = 'announcements'
+    dataset['announcements'] = Announcement.objects.all()
+    return render(request, 'dashboard/announcements.html', dataset)
+
+# announcement edit view
+
+
+def dashboard_announcement_edit_data(request, id):
+    if not (request.user.is_authenticated and request.user.is_superuser and request.user.is_staff):
+        return redirect('/')
+
+    announcement = get_object_or_404(Announcement, id=id)
+    if request.method == 'POST':
+        form = AnnouncementCreateForm(request.POST, instance=announcement)
+        if form.is_valid():
+            instance = form.save(commit=False)
+            instance.name = request.POST.get('name')
+            instance.description = request.POST.get('description')
+            instance.debut = request.POST.get('debut')
+            instance.fin = request.POST.get('fin')
+            instance.save()
+            return redirect('dashboard:announcements')
+        else:
+            messages.error(request, 'Trying to create dublicate announcement',
+                           extra_tags='alert alert-warning alert-dismissible show')
+            return redirect('dashboard:announcementcreate')
+
+    dataset = dict()
+    form = AnnouncementCreateForm(request.POST or None, instance=announcement)
+    dataset['form'] = form
+    dataset['name'] = 'edit - {0}'.format(announcement.name)
+    return render(request, 'dashboard/announcement_create.html', dataset)
+
+# announcement delete view
+
+
+def dashboard_announcement_delete(request, id):
+    if not (request.user.is_authenticated and request.user.is_superuser and request.user.is_staff):
+        return redirect('/')
+
+    announcement = get_object_or_404(Announcement, id=id)
+    announcement.delete()
+    return redirect('dashboard:announcements')
