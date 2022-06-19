@@ -206,8 +206,21 @@ def dashboard_employee_delete(request, id):
 def dashboard_departments(request):
     if not (request.user.is_authenticated and request.user.is_superuser and request.user.is_staff):
         return redirect('/')
-
     dataset = dict()
+    departments = Department.objects.all()
+
+    query = request.GET.get('search')
+    if query:
+        departments = departments.filter(
+            Q(name__icontains=query)
+        )
+
+    paginator = Paginator(departments, 10)  # show 10 employee lists per page
+
+    page = request.GET.get('page')
+    departments_paginated = paginator.get_page(page)
+
+    dataset['department_list'] = departments_paginated
     dataset['title'] = 'departments'
     dataset['departments'] = Department.objects.all()
     return render(request, 'dashboard/departments.html', dataset)
@@ -283,6 +296,20 @@ def dashboard_roles(request):
         return redirect('/')
 
     dataset = dict()
+    roles = Role.objects.all()
+
+    query = request.GET.get('search')
+    if query:
+        roles = roles.filter(
+            Q(name__icontains=query)
+        )
+
+    paginator = Paginator(roles, 10)  # show 10 employee lists per page
+
+    page = request.GET.get('page')
+    roles_paginated = paginator.get_page(page)
+
+    dataset['roles_list'] = roles_paginated
     dataset['title'] = 'roles'
     dataset['roles'] = Role.objects.all()
     return render(request, 'dashboard/roles.html', dataset)
@@ -357,6 +384,20 @@ def dashboard_announcements(request):
         return redirect('/')
 
     dataset = dict()
+    announcements = Announcement.objects.all()
+
+    query = request.GET.get('search')
+    if query:
+        announcements = announcements.filter(
+            Q(name__icontains=query)
+        )
+
+    paginator = Paginator(announcements, 10)  # show 10 employee lists per page
+
+    page = request.GET.get('page')
+    announcements_paginated = paginator.get_page(page)
+
+    dataset['announcement_list'] = announcements_paginated
     dataset['title'] = 'announcements'
     dataset['announcements'] = Announcement.objects.all()
     return render(request, 'dashboard/announcements.html', dataset)
