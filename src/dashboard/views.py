@@ -10,16 +10,9 @@ from django.contrib import messages
 from django.urls import reverse
 from employee.forms import EmployeeCreateForm, DepartmentCreateForm, RoleCreateForm, AnnouncementCreateForm
 from employee.models import *
-# from leave.forms import CommentForm
 
 
 def dashboard(request):
-    '''
-    Summary of all apps - display here with charts etc.
-    eg.lEAVE - PENDING|APPROVED|RECENT|REJECTED - TOTAL THIS MONTH or NEXT MONTH
-    EMPLOYEE - TOTAL | GENDER 
-    CHART - AVERAGE EMPLOYEE AGES
-    '''
     dataset = dict()
     user = request.user
 
@@ -38,6 +31,9 @@ def dashboard(request):
     return render(request, 'dashboard/dashboard_index.html', dataset)
 
 
+########################################################## EMPLOYEE ##########################################################
+
+# ALL EMPLOYEES
 def dashboard_employees(request):
     if not (request.user.is_authenticated and request.user.is_superuser and request.user.is_staff):
         return redirect('/')
@@ -63,11 +59,10 @@ def dashboard_employees(request):
     dataset['departments'] = departments
     dataset['all_employees'] = Employee.objects.all_employees()
 
-    blocked_employees = Employee.objects.all_blocked_employees()
-
-    dataset['blocked_employees'] = blocked_employees
     dataset['title'] = 'Employees list view'
     return render(request, 'dashboard/employee_app.html', dataset)
+
+# CREATE EMPLOYEE
 
 
 def dashboard_employees_create(request):
@@ -119,6 +114,8 @@ def dashboard_employees_create(request):
     dataset['form'] = form
     dataset['title'] = 'register employee'
     return render(request, 'dashboard/employee_create.html', dataset)
+
+# EDIT EMPLOYEE
 
 
 def employee_edit_data(request, id):
@@ -177,6 +174,8 @@ def employee_edit_data(request, id):
     dataset['title'] = 'edit - {0}'.format(employee.get_full_name)
     return render(request, 'dashboard/employee_create.html', dataset)
 
+# EMPLOYEE DETAILS
+
 
 def dashboard_employee_info(request, id):
     if not request.user.is_authenticated:
@@ -189,7 +188,31 @@ def dashboard_employee_info(request, id):
     dataset['title'] = 'profile - {0}'.format(employee.get_full_name)
     return render(request, 'dashboard/employee_detail.html', dataset)
 
-# function add departement
+# DELETE EMPLOYEE
+
+
+def dashboard_employee_delete(request, id):
+    if not (request.user.is_authenticated and request.user.is_superuser and request.user.is_staff):
+        return redirect('/')
+
+    employee = get_object_or_404(Employee, id=id)
+    employee.delete()
+    return redirect('dashboard:employees')
+
+########################################################## DEPARTMENT ##########################################################
+# ALL DEPARTMENTS
+
+
+def dashboard_departments(request):
+    if not (request.user.is_authenticated and request.user.is_superuser and request.user.is_staff):
+        return redirect('/')
+
+    dataset = dict()
+    dataset['title'] = 'departments'
+    dataset['departments'] = Department.objects.all()
+    return render(request, 'dashboard/departments.html', dataset)
+
+# CREATE DEPARTMENT
 
 
 def dashboard_department_create(request):
@@ -214,19 +237,7 @@ def dashboard_department_create(request):
     dataset['title'] = 'register department'
     return render(request, 'dashboard/department_create.html', dataset)
 
-# function dashboard_departments view
-
-
-def dashboard_departments(request):
-    if not (request.user.is_authenticated and request.user.is_superuser and request.user.is_staff):
-        return redirect('/')
-
-    dataset = dict()
-    dataset['title'] = 'departments'
-    dataset['departments'] = Department.objects.all()
-    return render(request, 'dashboard/departments.html', dataset)
-
-# function dashboard_department_edit_data view
+# EDIT DEPARTMENT
 
 
 def dashboard_department_edit_data(request, id):
@@ -252,7 +263,31 @@ def dashboard_department_edit_data(request, id):
     dataset['title'] = 'edit - {0}'.format(department.name)
     return render(request, 'dashboard/department_create.html', dataset)
 
-# function add role
+# DELETE DEPARTMENT
+
+
+def dashboard_department_delete(request, id):
+    if not (request.user.is_authenticated and request.user.is_superuser and request.user.is_staff):
+        return redirect('/')
+
+    department = get_object_or_404(Department, id=id)
+    department.delete()
+    return redirect('dashboard:departments')
+
+########################################################## ROLES ##########################################################
+# ALL ROLES
+
+
+def dashboard_roles(request):
+    if not (request.user.is_authenticated and request.user.is_superuser and request.user.is_staff):
+        return redirect('/')
+
+    dataset = dict()
+    dataset['title'] = 'roles'
+    dataset['roles'] = Role.objects.all()
+    return render(request, 'dashboard/roles.html', dataset)
+
+# CREATE ROLES
 
 
 def dashboard_role_create(request):
@@ -277,20 +312,8 @@ def dashboard_role_create(request):
     dataset['title'] = 'register role'
     return render(request, 'dashboard/role_create.html', dataset)
 
-# function dashboard_role view
 
-
-def dashboard_roles(request):
-    if not (request.user.is_authenticated and request.user.is_superuser and request.user.is_staff):
-        return redirect('/')
-
-    dataset = dict()
-    dataset['title'] = 'roles'
-    dataset['roles'] = Role.objects.all()
-    return render(request, 'dashboard/roles.html', dataset)
-
-
-# function dashboard_role_edit_data view
+# EDIT ROLES
 def dashboard_role_edit_data(request, id):
     if not (request.user.is_authenticated and request.user.is_superuser and request.user.is_staff):
         return redirect('/')
@@ -315,7 +338,7 @@ def dashboard_role_edit_data(request, id):
     return render(request, 'dashboard/role_edit.html', dataset)
 
 
-# function dashboard_role__delete data view
+# DELETE ROLES
 def dashboard_role_delete(request, id):
     if not (request.user.is_authenticated and request.user.is_superuser and request.user.is_staff):
         return redirect('/')
@@ -324,30 +347,22 @@ def dashboard_role_delete(request, id):
     role.delete()
     return redirect('dashboard:roles')
 
-# function dashboard_departement__delete view
+########################################################## ANNOUNCMENT ##########################################################
+
+# ALL ANNOUNCEMENTS
 
 
-def dashboard_department_delete(request, id):
-    if not (request.user.is_authenticated and request.user.is_superuser and request.user.is_staff):
+def dashboard_announcements(request):
+    if not (request.user.is_authenticated):
         return redirect('/')
 
-    department = get_object_or_404(Department, id=id)
-    department.delete()
-    return redirect('dashboard:departments')
-
-# function dashboard_employee__delete view
-
-
-def dashboard_employee_delete(request, id):
-    if not (request.user.is_authenticated and request.user.is_superuser and request.user.is_staff):
-        return redirect('/')
-
-    employee = get_object_or_404(Employee, id=id)
-    employee.delete()
-    return redirect('dashboard:employees')
+    dataset = dict()
+    dataset['title'] = 'announcements'
+    dataset['announcements'] = Announcement.objects.all()
+    return render(request, 'dashboard/announcements.html', dataset)
 
 
-# admin can create a announcement
+# CREATE ANNOUNCEMENT
 def dashboard_announcement_create(request):
     if not (request.user.is_authenticated and request.user.is_superuser and request.user.is_staff):
         return redirect('/')
@@ -373,19 +388,7 @@ def dashboard_announcement_create(request):
     dataset['name'] = 'register announcement'
     return render(request, 'dashboard/announcement_create.html', dataset)
 
-# announcements view
-
-
-def dashboard_announcements(request):
-    if not (request.user.is_authenticated):
-        return redirect('/')
-
-    dataset = dict()
-    dataset['title'] = 'announcements'
-    dataset['announcements'] = Announcement.objects.all()
-    return render(request, 'dashboard/announcements.html', dataset)
-
-# announcement edit view
+# EDIT ANNOUNCEMENT
 
 
 def dashboard_announcement_edit_data(request, id):
@@ -414,7 +417,7 @@ def dashboard_announcement_edit_data(request, id):
     dataset['name'] = 'edit - {0}'.format(announcement.name)
     return render(request, 'dashboard/announcement_create.html', dataset)
 
-# announcement delete view
+# DELETE ANNOUNCEMENT
 
 
 def dashboard_announcement_delete(request, id):

@@ -222,25 +222,18 @@
 							      <th scope="col">Fullname</th>
 							      <th scope="col">Role</th>
 							      <th scope="col">Department</th>
-							      <th scope="col">Status</th>
+							      <th scope="col">Salaire</th>
 								<th scope="col">Actions</th>
 							    </tr>
 							  </thead>
 							  <tbody>
 							  	{% for employee in employee_list %}
 							    <tr>
-
-
-							      <td>{{ employee.get_full_name }}</td>
+							      <td>{{ employee.user }}</td>
 							      <td>{{ employee.role }}</td>
 							      <td>{{ employee.department }}</td>
-
-							      {% if employee.is_blocked %}
-							      <td>Inactive</td>
-							      {% else %}
-							      <td>active</td>
-							      {% endif %}
-							      <td> 
+							      <td>{{ employee.salaire }} DH</td>
+								  <td>
 							      	<a href="{% url 'dashboard:employeeinfo' employee.id %}">
 							      	    view
 							      	</a>

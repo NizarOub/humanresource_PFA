@@ -3,7 +3,6 @@ from employee.models import Role, Department, Employee, Announcement
 from django.contrib.auth.models import User
 
 
-# EMPLoYEE
 class EmployeeCreateForm(forms.ModelForm):
     image = forms.ImageField(widget=forms.FileInput(
         attrs={'onchange': 'previewImage(this);'}))
@@ -15,16 +14,10 @@ class EmployeeCreateForm(forms.ModelForm):
             'bio': forms.Textarea(attrs={'cols': 5, 'rows': 5})
         }
 
-# DEPARTMENT Nom et description
-
-
 class DepartmentCreateForm(forms.ModelForm):
     class Meta:
         model = Department
         exclude = ['created', 'updated']
-
-# Role Nom et description
-
 
 class RoleCreateForm(forms.ModelForm):
     class Meta:

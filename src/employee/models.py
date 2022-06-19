@@ -7,7 +7,6 @@ from django.utils.translation import gettext as _
 from django.contrib.auth.models import User
 
 
-# Create your models here.
 class Role(models.Model):
     '''
         Role Table eg. Staff,Manager,H.R ...
@@ -49,7 +48,6 @@ class Department(models.Model):
 
 
 class Employee(models.Model):
-
     MALE = 'male'
     FEMALE = 'female'
     OTHER = 'other'
@@ -62,46 +60,14 @@ class Employee(models.Model):
         (NOT_KNOWN, 'Not Known'),
     )
 
-    MR = 'Mr'
-    MRS = 'Mrs'
-    MSS = 'Mss'
-    DR = 'Dr'
-    SIR = 'Sir'
-    MADAM = 'Madam'
-
-    TITLE = (
-        (MR, 'Mr'),
-        (MRS, 'Mrs'),
-        (MSS, 'Mss'),
-        (DR, 'Dr'),
-        (SIR, 'Sir'),
-        (MADAM, 'Madam'),
-    )
-
-    FULL_TIME = 'Full-Time'
-    PART_TIME = 'Part-Time'
-    CONTRACT = 'Contract'
-    INTERN = 'Intern'
-
-    EMPLOYEETYPE = (
-        (FULL_TIME, 'Full-Time'),
-        (PART_TIME, 'Part-Time'),
-        (CONTRACT, 'Contract'),
-        (INTERN, 'Intern'),
-    )
-
     # PERSONAL DATA
     user = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
-    title = models.CharField(_('Title'), max_length=10,
-                             default=MR, choices=TITLE, blank=False, null=True)
     image = models.FileField(_('Profile Image'), upload_to='profiles', default='default.png', blank=True,
                              null=True, help_text='upload image size less than 2.0MB')  # work on path username-date/image
     firstname = models.CharField(
         _('Firstname'), max_length=125, null=False, blank=False)
     lastname = models.CharField(
         _('Lastname'), max_length=125, null=False, blank=False)
-    othername = models.CharField(
-        _('Othername (optional)'), max_length=125, null=True, blank=True)
     sex = models.CharField(_('Gender'), max_length=10,
                            default=MALE, choices=GENDER, blank=False)
     email = models.CharField(
@@ -114,7 +80,6 @@ class Employee(models.Model):
 
     cinnumber = models.CharField(
         _('CIN Number'), max_length=30, null=True, blank=True)
-
     # COMPANY DATA
     department = models.ForeignKey(Department, verbose_name=_(
         'Department'), on_delete=models.SET_NULL, null=True, default=None)
@@ -122,15 +87,8 @@ class Employee(models.Model):
         'Role'), on_delete=models.SET_NULL, null=True, default=None)
     startdate = models.DateField(
         _('Employement Date'), help_text='date of employement', blank=False, null=True)
-    employeetype = models.CharField(_('Employee Type'), max_length=15,
-                                    default=FULL_TIME, choices=EMPLOYEETYPE, blank=False, null=True)
-
-    # app related
-    is_blocked = models.BooleanField(
-        _('Is Blocked'), help_text='button to toggle employee block and unblock', default=False)
-    is_deleted = models.BooleanField(
-        _('Is Deleted'), help_text='button to toggle employee deleted and undelete', default=False)
-
+    salaire = models.DecimalField(
+        _('Salaire'), max_digits=10, decimal_places=2, default=0)
     created = models.DateTimeField(verbose_name=_(
         'Created'), auto_now_add=True, null=True)
     updated = models.DateTimeField(
@@ -152,13 +110,9 @@ class Employee(models.Model):
         fullname = ''
         firstname = self.firstname
         lastname = self.lastname
-        othername = self.othername
 
-        if (firstname and lastname) or othername is None:
+        if (firstname and lastname) is None:
             fullname = firstname + ' ' + lastname
-            return fullname
-        elif othername:
-            fullname = firstname + ' ' + lastname + ' '+othername
             return fullname
         return
 
@@ -171,7 +125,6 @@ class Employee(models.Model):
         return
 
 
-# class announcement with name, description, date debut, date fin
 class Announcement(models.Model):
     name = models.CharField(max_length=125)
     bio = models.CharField(max_length=255, default='', null=True, blank=True)

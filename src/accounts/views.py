@@ -13,9 +13,6 @@ from .forms import UserLogin, UserAddForm
 def changepassword(request):
     if not request.user.is_authenticated:
         return redirect('/')
-    '''
-	Please work on me -> success & error messages & style templates
-	'''
     if request.method == 'POST':
         form = PasswordChangeForm(request.user, request.POST)
         if form.is_valid():
@@ -35,10 +32,7 @@ def changepassword(request):
 
 
 def login_view(request):
-    '''
-    work on me - needs messages and redirects
 
-    '''
     login_user = request.user
     if request.method == 'POST':
         form = UserLogin(data=request.POST)
@@ -66,9 +60,6 @@ def login_view(request):
 
 
 def user_profile_view(request):
-    '''
-    user profile view -> staffs (No edit) only admin/HR can edit.
-    '''
     user = request.user
     if user.is_authenticated:
         employee = Employee.objects.filter(user=user).first()
