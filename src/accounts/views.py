@@ -18,7 +18,6 @@ def changepassword(request):
         if form.is_valid():
             user = form.save(commit=True)
             update_session_auth_hash(request, user)
-
             messages.success(request, 'Password changed successfully',
                              extra_tags='alert alert-success alert-dismissible show')
             return redirect('accounts:changepassword')

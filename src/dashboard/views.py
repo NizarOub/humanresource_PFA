@@ -171,7 +171,6 @@ def employee_edit_data(request, id):
     form = EmployeeCreateForm(request.POST or None,
                               request.FILES or None, instance=employee)
     dataset['form'] = form
-    dataset['title'] = 'edit - {0}'.format(employee.get_full_name)
     return render(request, 'dashboard/employee_create.html', dataset)
 
 # EMPLOYEE DETAILS
